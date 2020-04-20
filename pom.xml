@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>dhf.mx.com.sifei</groupId>
+    <artifactId>timbradoE</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <build>
+        <resources>
+            <resource>
+                <targetPath>META-INF</targetPath>
+                <directory>src</directory>
+                <includes>
+                    <include>jax-ws-catalog.xml</include>
+                    <include>wsdl/**</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- 
+            En java 11 wsimport fue removido. La cual es la utilidad que genera las clases apartir del wsdl.Por ello se debe agregar como plugin para que 
+            sea capaz de generar las clases.
+            De hecho  JAX-WS (Java API for XML-Based Web Services) fue removido en java 11 el cual incluye a wsimport. Debido que versiones independjentes de tecnologias Java EE
+            estan disponibles via Maven, se tomo la desicion de removerlas.
+            Aun en java 9 estan disponibles pero son marcadas como deprecadas
+            -->
+            <plugin>
+              <groupId>com.helger.maven</groupId>
+               <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>devcfdi.sifei.com.mx_8080/SIFEI33/SIFEI.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>dhf.mx.com.sifei.timbradoe</packageName>
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                            <wsdlLocation>http://devcfdi.sifei.com.mx:8080/SIFEI33/SIFEI?wsdl</wsdlLocation>
+                            <staleFile>${project.build.directory}/jaxws/stale/SIFEI.stale</staleFile>
+                        </configuration>
+                        <id>wsimport-generate-SIFEI</id>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.xml</groupId>
+                        <artifactId>webservices-api</artifactId>
+                        <version>2.1-b16</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <sourceDestDir>${project.build.directory}/generated-sources/jaxws-wsimport</sourceDestDir>
+                    <xnocompile>true</xnocompile>
+                    <verbose>true</verbose>
+                    <extension>true</extension>
+                    <catalog>${basedir}/src/jax-ws-catalog.xml</catalog>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-rt</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ini4j</groupId>
+            <artifactId>ini4j</artifactId>
+            <version>0.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
+        </dependency>
+<dependency>
+    <groupId>javax.activation</groupId>
+    <artifactId>activation</artifactId>
+    <version>1.1.1</version>
+</dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>  
+        <maven.compiler.release>8</maven.compiler.release>
+        <java.version>11</java.version>
+    </properties>
+</project>
