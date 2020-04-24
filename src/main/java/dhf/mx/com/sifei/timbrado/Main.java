@@ -1,6 +1,7 @@
 
 package dhf.mx.com.sifei.timbrado;
 
+import dhf.mx.com.sifei.cancelacion.Cancelacion_Service;
 import dhf.mx.com.sifei.timbradoe.SIFEIService;
 import dhf.mx.com.sifei.timbradoe.SifeiException_Exception;
 import java.io.ByteArrayInputStream;
@@ -28,15 +29,59 @@ import org.ini4j.Wini;
  * Nota: Para simplificar los ejemplos todas las rutas son relativas y 
  * los datos se leen de un archivo config.ini, lo cual no debe de hacerse en un ambiente de produccion.
  * 
- * Este ejemplo usar java-ws
+ * Este ejemplo usa java-ws.
+ * 
  */
 public class Main {
 
    
 
-    public static void main(String[] args) {
-        
-     timbrar();
+    public static void main(String[] args) throws IOException {
+       cancelar(); 
+     //timbrar();
+    }
+    
+    public static void cancelar() throws IOException{
+        try {
+             Wini ini = new Wini(new File("./config.ini"));
+             //los datos de se leen desde un archivo de configuracion, no hacer esto en produccion
+            String UsuarioSIFEI = ini.get("timbrado", "UsuarioSIFEI", String.class);
+            String PasswordSIFEI = ini.get("timbrado", "PasswordSIFEI", String.class);
+            String IdEquipo=ini.get("timbrado", "IdEquipoGenerado", String.class);            
+            String pfxPath=ini.get("timbrado", "PFX", String.class);
+            String pfxPass=ini.get("timbrado", "PFXPass", String.class);
+            
+            //se lee el PFX
+            byte[] pfxBytes=Files.readAllBytes(Paths.get(pfxPath));
+            Cancelacion_Service service= new Cancelacion_Service();
+            
+            
+            List<String> uuids = new ArrayList();
+            
+            uuids.add("f2817145-de1a-4746-8fea-907d1a74e7de");
+            
+
+            
+            //consumimos el serivicio que en caso de exito devuelve un acuse XML
+           String acuseCancelacion=  service.getCancelacionPort().cancelaCFDI(
+                   UsuarioSIFEI,
+                   PasswordSIFEI, 
+                   IdEquipo, 
+                   pfxBytes, //pfx 
+                   pfxPass, //password del pfx
+                   uuids //lista de UUID a cancelar
+           );
+           
+           System.out.println(acuseCancelacion);
+           
+           
+           
+        }catch(dhf.mx.com.sifei.cancelacion.SifeiException e){
+               System.err.println(e.getFaultInfo().getCodigo());
+             System.err.println(e.getFaultInfo().getError());
+             System.err.println(e.getFaultInfo().getDetalle());
+             
+        }
     }
     
     public static void timbrar(){

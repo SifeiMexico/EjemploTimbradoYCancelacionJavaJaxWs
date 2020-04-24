@@ -2,4 +2,6 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://devcfdi.sifei.com.mx:8080/SIFEI33/SIFEI?wsdl" uri="wsdl/devcfdi.sifei.com.mx_8080/SIFEI33/SIFEI.wsdl"/>
     <system systemId="http://devcfdi.sifei.com.mx:8080/SIFEI33/SIFEI?xsd=1" uri="wsdl/devcfdi.sifei.com.mx_8080/SIFEI33/SIFEI.xsd_1.xsd"/>
+    <system systemId="http://devcfdi.sifei.com.mx:8888/CancelacionSIFEI/Cancelacion?wsdl" uri="wsdl/devcfdi.sifei.com.mx_8888/CancelacionSIFEI/Cancelacion.wsdl"/>
+    <system systemId="http://devcfdi.sifei.com.mx:8888/CancelacionSIFEI/Cancelacion?xsd=1" uri="wsdl/devcfdi.sifei.com.mx_8888/CancelacionSIFEI/Cancelacion.xsd_1.xsd"/>
 </catalog>
